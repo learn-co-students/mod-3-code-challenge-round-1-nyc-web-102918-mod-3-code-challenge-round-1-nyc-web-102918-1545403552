@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const author = document.getElementById('author-select')
   const authorContainer = document.getElementById('author-container')
+  const commentContainer = document.getElementById('comment-container')
 
   author.addEventListener('change', (event) => {
     let author_id = event.target.value
@@ -42,4 +43,19 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     }
   })
+
+  commentContainer.addEventListener('click', (event) => {
+    if(event.target.innerHTML === 'Delete'){
+      const commentId = event.target.dataset.id
+
+      fetch(`http://localhost:3000/comments/${commentId}`, {method: 'delete'})
+      .then(r => r.json())
+      .then (comment => {
+        event.target.parentNode.remove()
+      })
+
+    }
+  })
+
+
 })
