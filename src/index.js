@@ -10,7 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(r => r.json())
     .then(info => {
       const authorContainer = document.getElementById('author-container')
-      console.log(info)
+      
+      authorContainer.innerHTML = `<h3 id=${info.blogName}> ${info.blogName}</h3>
+      <h4 id=${info.name}> ${info.name}</h4>
+      <ul id="blog-container">
+      </ul>`
+
+      const blogContainer = document.getElementById("blog-container")
+
+      for(let blog of info.blogPosts){
+        blogContainer.innerHTML += `<li data-id = ${blog.id}> ${blog.title}</li>`
+      }
+
     })
   })
 })
