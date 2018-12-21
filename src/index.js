@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json'
         }
       })
-      .then( response => response.json() )
       .then( () => {
         document.querySelector(`#comment-${commentId}`).remove()
       })
