@@ -30,14 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     blogContainer.innerHTML = ""
     commentContainer.innerHTML = ""
 
-    fetch(`http://localhost:3000/authors/${authorId}?_embed=blogPosts`)
-    .then(r => r.json())
+    getPosts(authorId)
     .then(data => {
       blogName.innerText = data.blogName
       authorName.innerText = data.name
       const blogPosts = data.blogPosts
       blogPosts.forEach(post => {
-        blogContainer.innerHTML += `<li data-post_id="${post.id}">${post.title}</li>`
+        blogContainer.innerHTML += renderPost(post)
       })
     })
   })
@@ -47,16 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.hasAttribute("data-post_id")) {
       const postId = e.target.dataset.post_id
       commentContainer.innerHTML = ""
-      fetch(`http://localhost:3000/blogPosts/${postId}?_embed=comments`)
-      .then(r => r.json())
+      getComments(postId)
       .then(data => {
         const comments = data.comments
         if (comments.length === 0) {
           commentContainer.innerHTML += "<li>No Comments</li>"
         } else {
           comments.forEach(comment => {
-            commentContainer.innerHTML += `
-              <li data-id="${comment.id}">${comment.content} <button data-action="delete" data-id="${comment.id}">Delete</button></li>`
+            commentContainer.innerHTML += renderComment(comment)
           })
         }
       })
@@ -67,14 +64,42 @@ document.addEventListener('DOMContentLoaded', () => {
   commentContainer.addEventListener("click", e => {
     const targetLi = commentContainer.querySelector(`li[data-id="${e.target.dataset.id}"]`)
     if (e.target.dataset.action === "delete") {
-      fetch(`http://localhost:3000/comments/${e.target.dataset.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }
-      })
+      deleteComment(e.target.dataset.id)
       .then( targetLi.remove() )
     }
   })
+
+
+  function Adapter(action, baseURL, query = "") {
+    if (action === "get") {
+      return function(id) {
+        return fetch(baseURL+"/"+id+query).then(r => r.json())
+      }
+    } else if (action === "delete") {
+      return function(id) {
+        return fetch(baseURL+"/"+id, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }
+        })
+      }
+    }
+  }
+
+  function renderPost(post) {
+    return `<li data-post_id="${post.id}">${post.title}</li>`
+  }
+
+  function renderComment(comment) {
+    return `<li data-id="${comment.id}">${comment.content} <button data-action="delete" data-id="${comment.id}">Delete</button></li>`
+  }
+
+
+  const getPosts = Adapter("get","http://localhost:3000/authors/","?_embed=blogPosts")
+  const getComments = Adapter("get","http://localhost:3000/blogPosts/", "?_embed=comments")
+  const deleteComment = Adapter("delete","http://localhost:3000/comments/")
+
+
 })
