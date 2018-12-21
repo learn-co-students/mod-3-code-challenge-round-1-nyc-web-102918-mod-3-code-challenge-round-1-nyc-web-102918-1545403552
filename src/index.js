@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then( parsedResponse => {
       authorContainer.innerHTML = `
         <h3 id="blog-name">${parsedResponse.blogName}</h3>
-        <h4 id="author-name">${parsedResponse.name}</h4>
+        <h4 id="author-name">By ${parsedResponse.name}</h4>
         <ul id="blog-container">
         </ul>
       `
