@@ -48,7 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if(event.target.innerHTML === 'Delete'){
       const commentId = event.target.dataset.id
 
-      fetch(`http://localhost:3000/comments/${commentId}`, {method: 'delete'})
+      fetch(`http://localhost:3000/comments/${commentId}`, {
+        method: 'delete',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
       .then(r => r.json())
       .then (comment => {
         event.target.parentNode.remove()
