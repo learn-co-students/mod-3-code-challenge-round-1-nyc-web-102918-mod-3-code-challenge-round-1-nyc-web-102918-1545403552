@@ -128,7 +128,7 @@ When a user clicks on a blog post, make a `fetch` request to retrieve all the co
 #### Endpoint to show a blog post's comments:
 This request returns all the comments with a blogPost `id` of `1`. You must dynamically make this request to the correct blogPost `id` whenever a blog post title is clicked on.
 
-```js
+```
 GET 'http://localhost:3000/blogPosts/1?_embed=comments'
 ```
 
