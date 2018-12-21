@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const authorContainer = document.getElementById('author-container')
   const commentContainer = document.getElementById('comment-container')
 
+  //Loaded all the blogposts for a single blog
   author.addEventListener('change', (event) => {
     let author_id = event.target.value
 
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   })
 
+  // Get Comments for a single blog post
   authorContainer.addEventListener('click', (event) => {
     if (event.target.dataset.id){
       const blogId = event.target.dataset.id 
@@ -44,6 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
+
+  // Delete Comments
   commentContainer.addEventListener('click', (event) => {
     if(event.target.innerHTML === 'Delete'){
       const commentId = event.target.dataset.id
