@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('%c DOM successfully loaded and parsed!', 'color: firebrick')
 
   const author = document.getElementById('author-select')
+  const authorContainer = document.getElementById('author-container')
 
   author.addEventListener('change', (event) => {
     let author_id = event.target.value
@@ -23,5 +24,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
     })
+  })
+
+  authorContainer.addEventListener('click', (event) => {
+    if (event.target.dataset.id){
+      const blogId = event.target.dataset.id 
+      fetch(`http://localhost:3000/blogPosts/${blogId}?_embed=comments`)
+      .then(r => r.json())
+      .then(blog_info => {
+        const commentContainer = document.getElementById('comment-container')
+        commentContainer.innerHTML = ''
+        for(let comment of blog_info.comments){
+          commentContainer.innerHTML += `<li> ${comment.content}
+                              <button data-id="${comment.id}">Delete</button>
+                              </li>`
+        }
+      })
+    }
   })
 })
